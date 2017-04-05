@@ -44,10 +44,8 @@ namespace CoreService.Models
         [JsonIgnore]
         public virtual ICollection<Menu> MenuSopa { get; set; }
 
-        [JsonIgnore]
         public virtual Categorias Categoria { get; set; }
 
-        [JsonIgnore]
         public virtual Tipos Tipo { get; set; }
     }
 }

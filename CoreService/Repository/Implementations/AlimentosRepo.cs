@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreService.Repository.Implementations
 {
@@ -16,6 +17,12 @@ namespace CoreService.Repository.Implementations
             Table = context.Alimentos;
 
         }
+
+        public override Task<List<Alimentos>> GetAllAsync()
+        {
+            return Table.Include(p => p.Categoria).Include(p => p.Tipo).ToListAsync();
+        }
+
 
     }
 }
