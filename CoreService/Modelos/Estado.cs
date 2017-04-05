@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace CoreService.Models
@@ -13,6 +14,7 @@ namespace CoreService.Models
         public int EstadoId { get; set; }
         public string Descripcion { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Ordenes> Ordenes { get; set; }
     }
 }

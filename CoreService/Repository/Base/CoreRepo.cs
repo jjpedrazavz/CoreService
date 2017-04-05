@@ -69,22 +69,22 @@ namespace CoreService.Repository
             }
         }
 
-        public T GetOne(int id)
+        public virtual T GetOne(int id)
         {
            return  Table.Find(id);
         }
 
-        public async Task<T> GetOneAsync(int id)
+        public virtual async Task<T> GetOneAsync(int id)
         {
             return await Table.FindAsync(id);
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync()
         {
             return await Table.ToListAsync();
         }
 
-        public List<T> GetAll()
+        public virtual List<T> GetAll()
         {
             return Table.ToList();
         }

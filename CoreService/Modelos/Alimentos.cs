@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace CoreService.Models
@@ -22,14 +23,31 @@ namespace CoreService.Models
         public decimal Precio { get; set; }
         public int TipoId { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<FoodImageMapping> FoodImageMapping { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Menu> MenuBebida { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Menu> MenuBocadillo { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Menu> MenuComplemento { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Menu> MenuPlatoFuerte { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Menu> MenuPostre { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Menu> MenuSopa { get; set; }
+
+        [JsonIgnore]
         public virtual Categorias Categoria { get; set; }
+
+        [JsonIgnore]
         public virtual Tipos Tipo { get; set; }
     }
 }

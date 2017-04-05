@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace CoreService.Models
@@ -15,6 +16,7 @@ namespace CoreService.Models
         public string Apellido { get; set; }
         public string Email { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Ordenes> Ordenes { get; set; }
     }
 }

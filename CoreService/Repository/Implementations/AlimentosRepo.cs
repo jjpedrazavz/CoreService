@@ -16,5 +16,6 @@ namespace CoreService.Repository.Implementations
             Table = context.Alimentos;
 
         }
+
     }
 }
