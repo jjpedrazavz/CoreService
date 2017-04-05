@@ -23,6 +23,11 @@ namespace CoreService.Repository.Implementations
             return Table.Include(p => p.Categoria).Include(p => p.Tipo).ToListAsync();
         }
 
+        
+        public override Task<Alimentos> GetOneAsync(int id)
+        {
+            return Table.Where(p => p.Id == id).Include(p => p.Categoria).Include(p => p.Tipo).Include(p => p.FoodImageMapping).FirstOrDefaultAsync();
+        }
 
     }
 }

@@ -11,7 +11,6 @@ namespace CoreService.Contratos
     /// <typeparam name="T"></typeparam>
     public interface IRepository<T>
     {
-
         int Add(T entity);
         Task<int> AddAsync(T entity);
 
@@ -35,9 +34,7 @@ namespace CoreService.Contratos
 
         Task<int> DeleteAsync(T entity);
 
-        //int Delete(string id);
-
-        //Task<int> DeleteAsync(string id);
+        Task<bool> ContainsAsync(T entity);
 
     }
 }

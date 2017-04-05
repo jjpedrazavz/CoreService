@@ -141,5 +141,9 @@ namespace CoreService.Repository
             return await SaveChangesAsync();
         }
 
+        public async Task<bool> ContainsAsync(T entity)
+        {
+            return await Table.ContainsAsync(entity);
+        }
     }
 }

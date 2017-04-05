@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using CoreService.Entities;
 using CoreService.Models;
 using CoreService.Contratos;
+using CoreService.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CoreService.Controllers
 {
@@ -16,10 +18,21 @@ namespace CoreService.Controllers
     public class AlimentosController : Controller
     {
         private readonly IRepository<Alimentos> _context;
+        private readonly IRepository<FoodImageMapping> _contextFoodImagesMap;
+        private readonly IRepository<FoodImages> _contextFoodImages;
+        private readonly IRepository<Categorias> _contextCategories;
+        private readonly IRepository<Tipos> _contextTipos;
 
-        public AlimentosController(IRepository<Alimentos> context)
+
+
+
+        public AlimentosController(IRepository<Alimentos> context, IRepository<FoodImageMapping> contextFoodImagesMap, IRepository<FoodImages> contextFoodImages, IRepository<Categorias> contextCategories, IRepository<Tipos> contextTipos)
         {
             _context = context;
+            _contextFoodImagesMap = contextFoodImagesMap;
+            _contextFoodImages = contextFoodImages;
+            _contextCategories = contextCategories;
+            _contextTipos = contextTipos;
         }
 
         // GET: api/Alimentos
@@ -31,21 +44,30 @@ namespace CoreService.Controllers
 
         // GET: api/Alimentos/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAlimentos([FromRoute] int id)
+        public async Task<IActionResult> GetAlimento([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var alimento = await _context.GetOneAsync(id);
 
-            if (alimento == null)
+            FoodViewModel viewModel = new FoodViewModel();
+
+            if (alimento != null)
+            {
+                  viewModel.CategoriasStock = _contextCategories.GetAll();
+                  viewModel.TiposStock = _contextTipos.GetAll();
+                  viewModel.SelectedImage = alimento.FoodImageMapping.FirstOrDefault().AlimentosImageId.Value;
+                  viewModel.ImagenesStock = _contextFoodImages.GetAll();
+                  viewModel.ID = alimento.Id;
+                  viewModel.Nombre = alimento.Nombre;
+                  viewModel.Precio = alimento.Precio;
+                  viewModel.CategoriaID = alimento.CategoriaId;
+                  viewModel.tipoID = alimento.TipoId;
+            }
+            else
             {
                 return NotFound();
             }
 
-            return Ok(alimento);
+            return Ok(viewModel);
         }
 
         // PUT: api/Alimentos/5
