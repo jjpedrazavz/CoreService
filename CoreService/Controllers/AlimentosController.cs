@@ -90,19 +90,54 @@ namespace CoreService.Controllers
             return NoContent();
         }
 
+
+        [HttpGet("CrearAlimento")]
+        public async Task<IActionResult> CrearAlimento()
+        {
+
+             Task<FoodViewModel> task = Task.Run( () => 
+                 {
+
+                    FoodViewModel viewModel = new FoodViewModel();
+
+                    viewModel.CategoriasStock = _contextCategories.GetAll();
+                    viewModel.TiposStock = _contextTipos.GetAll();
+                    viewModel.ImagenesStock = _contextFoodImages.GetAll();
+
+                   return viewModel;
+
+                 });
+
+               return Ok( await task);
+        }
+
         // POST: api/Alimentos
         //Crear
-        [HttpPost]
-        public async Task<IActionResult> PostAlimentos([FromBody] Alimentos alimento)
+        [HttpPost("CrearAlimentoConfirm")]
+        public async Task<IActionResult> CrearAlimentoConfirm([FromBody] FoodViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await _context.AddAsync(alimento);
+            Alimentos nuevoAlimento = new Alimentos();
+            nuevoAlimento.Nombre = viewModel.Nombre;
+            nuevoAlimento.CategoriaId = viewModel.CategoriaID;
+            nuevoAlimento.TipoId = viewModel.tipoID;
+            nuevoAlimento.Precio = viewModel.Precio;
+            nuevoAlimento.FoodImageMapping.Add(new FoodImageMapping { AlimentosImageId = viewModel.SelectedImage, ImageNumber=1,  });
 
-            return CreatedAtAction("GetAlimentos", new { id = alimento.Id }, alimento);
+            try
+            {
+                int result = await _context.AddAsync(nuevoAlimento);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Error al crear el elemento");
+            }
+
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         // DELETE: api/Alimentos/5
