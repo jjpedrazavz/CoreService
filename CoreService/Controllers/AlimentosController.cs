@@ -9,7 +9,6 @@ using CoreService.Entities;
 using CoreService.Models;
 using CoreService.Contratos;
 using CoreService.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CoreService.Controllers
 {
@@ -22,9 +21,6 @@ namespace CoreService.Controllers
         private readonly IRepository<FoodImages> _contextFoodImages;
         private readonly IRepository<Categorias> _contextCategories;
         private readonly IRepository<Tipos> _contextTipos;
-
-
-
 
         public AlimentosController(IRepository<Alimentos> context, IRepository<FoodImageMapping> contextFoodImagesMap, IRepository<FoodImages> contextFoodImages, IRepository<Categorias> contextCategories, IRepository<Tipos> contextTipos)
         {
@@ -70,24 +66,80 @@ namespace CoreService.Controllers
             return Ok(viewModel);
         }
 
-        // PUT: api/Alimentos/5
+        // PUT: api/Alimentos/UpdateAlimentos
         //Actualizar
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAlimentos([FromRoute] int id, [FromBody] Alimentos alimento)
+        [HttpPut("UpdateAlimentos")]
+        public async Task<IActionResult> UpdateAlimentos([FromBody] FoodViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != alimento.Id)
+            //obtenemos el alimento original en base a la ID del viewModel devuelto.
+            var productToUpdate = await _context.GetOneAsync(viewModel.ID);
+
+
+            if (!productToUpdate.Nombre.Equals(viewModel.Nombre))
             {
-                return BadRequest();
+                productToUpdate.Nombre = viewModel.Nombre;
+            }
+            if (!int.Equals(productToUpdate.CategoriaId, viewModel.CategoriaID))
+            {
+                productToUpdate.CategoriaId = viewModel.CategoriaID;
+            }
+            if (!int.Equals(productToUpdate.Precio, viewModel.Precio))
+            {
+                productToUpdate.Precio = viewModel.Precio;
+            }
+            if (!int.Equals(productToUpdate.TipoId, viewModel.tipoID))
+            {
+                productToUpdate.TipoId = viewModel.tipoID;
             }
 
-            await _context.SaveAsync(alimento);
-   
-            return NoContent();
+            //verificamos si el alimento original no tuvo imagenes asociadas, de ser asi creamos una coleccion antes.
+            if (productToUpdate.FoodImageMapping == null)
+                {
+                    productToUpdate.FoodImageMapping = new List<FoodImageMapping>();
+
+                }
+
+                //verificamos si ya habia un elemento dentro de la coleccion
+                if(productToUpdate.FoodImageMapping.Count > 0)
+                {
+
+                    //verificamos si la imagen cambio
+                    if(productToUpdate.FoodImageMapping.FirstOrDefault().AlimentosImageId != viewModel.SelectedImage)
+                    {
+                        //devolvemos un objeto AlimentoImagen con los datos de una nueva Imagen si es diferente
+                        productToUpdate.FoodImageMapping.FirstOrDefault().AlimentosImage = await _contextFoodImages.GetOneAsync(viewModel.SelectedImage);
+                    }
+
+                }
+                else
+                {
+                    //si no existia una imagen asociada al producto se crea un objeto nuevo FoodImageMappping
+                    productToUpdate.FoodImageMapping.Add(new FoodImageMapping
+                    {
+                        ImageNumber = 1,
+                        AlimentosImageId = viewModel.SelectedImage,
+                        AlimentosImage = await _contextFoodImages.GetOneAsync(viewModel.SelectedImage)
+
+                    });
+
+
+                }
+
+            try
+            {
+                await _context.SaveAsync(productToUpdate);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status304NotModified);
+            }
+            
+            return StatusCode(StatusCodes.Status202Accepted);
         }
 
 
@@ -111,7 +163,7 @@ namespace CoreService.Controllers
                return Ok( await task);
         }
 
-        // POST: api/Alimentos
+        // POST: api/Alimentos/CrearAlimentoConfirm
         //Crear
         [HttpPost("CrearAlimentoConfirm")]
         public async Task<IActionResult> CrearAlimentoConfirm([FromBody] FoodViewModel viewModel)
@@ -141,7 +193,7 @@ namespace CoreService.Controllers
         }
 
         // DELETE: api/Alimentos/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteAlimentos/{id}")]
         public async Task<IActionResult> DeleteAlimentos([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -158,17 +210,8 @@ namespace CoreService.Controllers
 
              await _context.DeleteAsync(alimento);
 
-            return Ok(alimento);
+            return StatusCode(StatusCodes.Status200OK);
         }
-
-
-        private bool AlimentosExists(int id)
-        {
-            var alimento = _context.GetOneAsync(id);
-
-            return alimento == null ? false : true;
-        }
-
 
     }
 }
