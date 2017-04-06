@@ -48,6 +48,7 @@ namespace CoreService
             services.AddSingleton<IRepository<FoodImageMapping>, FoodImageMappingRepo>();
             services.AddSingleton<IRepository<FoodImages>, FoodImagesRepo>();
             services.AddSingleton<IRepository<Tipos>, TipoRepo>();
+            services.AddSingleton<IRepository<Estado>, EstadoRepo>();
 
         }
 

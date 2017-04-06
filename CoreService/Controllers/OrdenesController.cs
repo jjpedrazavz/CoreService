@@ -19,11 +19,13 @@ namespace CoreService.Controllers
     {
         private readonly IRepository<Ordenes> _context;
         private readonly IRepository<Alimentos> _contextFood;
+        private readonly IRepository<Estado> _contextEstado;
 
-        public OrdenesController(IRepository<Ordenes> context, IRepository<Alimentos> contextFood)
+        public OrdenesController(IRepository<Ordenes> context, IRepository<Alimentos> contextFood, IRepository<Estado> contextEstado)
         {
             _context = context;
             _contextFood = contextFood;
+            _contextEstado = contextEstado;
         }
 
         // GET: api/Ordenes
@@ -207,31 +209,64 @@ namespace CoreService.Controllers
             return NoContent();
         }
 
+
+        [HttpGet("PostOrdenes")]
+        public async Task<IActionResult> PostOrdenes()
+        {
+            OrderViewModel viewModel = new OrderViewModel();
+
+            viewModel.AlimentosList = await _contextFood.GetAllAsync();
+            viewModel.EstadosList = await _contextEstado.GetAllAsync();
+
+            return Ok(viewModel);
+
+
+        }
+        
         // POST: api/Ordenes
         //crearOrden
-        [HttpPost]
-        public async Task<IActionResult> PostOrdenes([FromBody] Ordenes orden)
+        [HttpPost("PostOrdenes")]
+        public async Task<IActionResult> PostOrdenes([FromBody] OrderViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (OrdenesExists(orden.OrdenId))
-            {
-                return BadRequest(RequestsOrdenes.OrdenExistente.ToString());
-            }
             else
             {
-                await _context.AddAsync(orden);
+                Ordenes orden = new Ordenes();
+                orden.ComensalId = 1;
+                orden.EstadoId = viewModel.EstadoID;
+                orden.Menu = new List<Menu>();
+
+                orden.Menu.Add(new Menu
+                {
+                    BebidaId = viewModel.bebidaID,
+                    SopaId = viewModel.sopaID,
+                    PlatoFuerteId = viewModel.platoFuerteID,
+                    ComplementoId = viewModel.complementoID,
+                    BocadilloId = viewModel.bocadilloID,
+                    PostreId = viewModel.postreID,
+
+                });
+
+                try
+                {
+                    await _context.AddAsync(orden);
+                }
+                catch (Exception)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
             }
 
 
-            return CreatedAtAction("GetOrdenes", new { id = orden.OrdenId }, orden);
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         // DELETE: api/Ordenes/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteOrdenes/{id}")]
         public async Task<IActionResult> DeleteOrdenes([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -246,9 +281,17 @@ namespace CoreService.Controllers
                 return NotFound();
             }
 
-            await _context.DeleteAsync(ordenes);
+            try
+            {
+                await _context.DeleteAsync(ordenes);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+                
+            }
 
-            return Ok(ordenes);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         private bool OrdenesExists(int id)

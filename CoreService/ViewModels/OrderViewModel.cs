@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using CoreService.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,22 +15,27 @@ namespace CoreService.ViewModels
 
         [Required]
         [Display(Name = "Comensal")]
-        public string ComensalID { get; set; }
+        public int ComensalID { get; set; }
 
         [Required]
-        public string EstadoID { get; set; }
+        public int EstadoID { get; set; }
 
-        public string sopaID { get; set; }
-        public string platoFuerteID { get; set; }
-        public string bebidaID { get; set; }
-        public string postreID { get; set; }
-        public string complementoID { get; set; }
+        public int sopaID { get; set; }
+        public int platoFuerteID { get; set; }
+        public int bebidaID { get; set; }
+        public int postreID { get; set; }
+        public int complementoID { get; set; }
 
-        public string bocadilloID { get; set; }
+        public int bocadilloID { get; set; }
 
 
         public SelectList Estados { get; set; }
 
         public List<SelectList> MenusSeleccionar { get; set; }
+
+        public IEnumerable<Alimentos> AlimentosList { get; set; }
+
+        public IEnumerable<Estado> EstadosList { get; set; }
+
     }
 }
