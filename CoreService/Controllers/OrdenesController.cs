@@ -143,7 +143,7 @@ namespace CoreService.Controllers
         //crearOrden
         [HttpPost("PostOrdenes")]
         public async Task<IActionResult> PostOrdenes([FromBody] OrderViewModel viewModel)
-        {/*
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -151,21 +151,24 @@ namespace CoreService.Controllers
             else
             {
                 Ordenes orden = new Ordenes();
-                orden.ComensalId = 1;
-                orden.EstadoId = viewModel.EstadoID;
+                orden.ComensalId = viewModel.ComensalID;
+                orden.EstadoId = 1;
+                orden.OrdFecha = DateTime.Now;
                 orden.Menu = new List<Menu>();
 
-                orden.Menu.Add(new Menu
+                foreach (var key in viewModel.menuSeleccionado.Keys)
                 {
-                    BebidaId = viewModel.bebidaID,
-                    SopaId = viewModel.sopaID,
-                    PlatoFuerteId = viewModel.platoFuerteID,
-                    ComplementoId = viewModel.complementoID,
-                    BocadilloId = viewModel.bocadilloID,
-                    PostreId = viewModel.postreID,
-
-                });
-
+                    if (!string.IsNullOrWhiteSpace(viewModel.menuSeleccionado[key].AlimentoID))
+                    {
+                        orden.Menu.Add(new Menu
+                        {
+                            OrdenId = viewModel.OrdenID,
+                            Alimento = await _contextFood.GetOneAsync(int.Parse(viewModel.menuSeleccionado[key].AlimentoID)),
+                            AlimentoId = int.Parse(viewModel.menuSeleccionado[key].AlimentoID),
+                            Quantity = viewModel.menuSeleccionado[key].Cantidad
+                        });
+                    }
+                }
                 try
                 {
                     await _context.AddAsync(orden);
@@ -176,7 +179,7 @@ namespace CoreService.Controllers
                 }
 
             }
-            */
+            
 
             return StatusCode(StatusCodes.Status201Created);
         }
