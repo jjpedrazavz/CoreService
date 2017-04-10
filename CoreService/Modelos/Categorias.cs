@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace CoreService.Models
@@ -14,7 +13,6 @@ namespace CoreService.Models
         public int CategoriaId { get; set; }
         public string Nombre { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<Alimentos> Alimentos { get; set; }
     }
 }

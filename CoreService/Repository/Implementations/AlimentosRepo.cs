@@ -1,17 +1,17 @@
 ﻿using CoreService.Contratos;
-using CoreService.Entities;
-using CoreService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using CoreService.Models;
+using CoreService.Entities;
 
 namespace CoreService.Repository.Implementations
 {
     public class AlimentosRepo: CoreRepo<Alimentos>, IRepository<Alimentos>
     {
-        public AlimentosRepo(HungryDbContext context)
+        public AlimentosRepo(Hungry4Context context)
         {
             this.Context = context;
             Table = context.Alimentos;
@@ -23,7 +23,11 @@ namespace CoreService.Repository.Implementations
             return Table.Include(p => p.Categoria).Include(p => p.Tipo).ToListAsync();
         }
 
-        
+        public Task<List<Alimentos>> getAllAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public override Task<Alimentos> GetOneAsync(int id)
         {
             return Table.Where(p => p.Id == id).Include(p => p.Categoria).Include(p => p.Tipo).Include(p => p.FoodImageMapping).FirstOrDefaultAsync();

@@ -8,15 +8,13 @@ namespace CoreService.ViewModels
 {
     public class SlimOrderViewModel
     {
-        [Display(Name = "Numero Orden")]
+
         public int OrdenID { get; set; }
 
-        [Required]
-        [Display(Name = "Comensal")]
         public int ComensalID { get; set; }
 
-        [Required]
-        [Display(Name ="Estatus")]
+        public DateTime OrdenFecha { get; set; }
+
         public string EstadoDescripcion { get; set; }
     }
 }

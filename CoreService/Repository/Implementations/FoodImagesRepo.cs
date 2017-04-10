@@ -10,7 +10,7 @@ namespace CoreService.Repository.Implementations
 {
     public class FoodImagesRepo: CoreRepo<FoodImages>, IRepository<FoodImages>
     {
-        public FoodImagesRepo(HungryDbContext context)
+        public FoodImagesRepo(Hungry4Context context)
         {
             this.Context = context;
             Table = context.FoodImages;
@@ -20,6 +20,11 @@ namespace CoreService.Repository.Implementations
         public override List<FoodImages> GetAll()
         {
             return Table.ToList();
+        }
+
+        public Task<List<FoodImages>> getAllAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

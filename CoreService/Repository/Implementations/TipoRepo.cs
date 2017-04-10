@@ -10,10 +10,15 @@ namespace CoreService.Repository.Implementations
 {
     public class TipoRepo: CoreRepo<Tipos>, IRepository<Tipos>
     {
-        public TipoRepo(HungryDbContext context)
+        public TipoRepo(Hungry4Context context)
         {
             this.Context = context;
             Table = context.Tipos;
+        }
+
+        public Task<List<Tipos>> getAllAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace CoreService.Models
@@ -11,6 +12,7 @@ namespace CoreService.Models
         }
 
         public int OrdenId { get; set; }
+        public DateTime OrdFecha { get; set; }
         public int ComensalId { get; set; }
         public int EstadoId { get; set; }
 

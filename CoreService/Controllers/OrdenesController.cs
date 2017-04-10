@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoreService.Entities;
-using CoreService.Models;
 using CoreService.Contratos;
 using CoreService.enums;
 using CoreService.ViewModels;
 using System.Diagnostics;
+using CoreService.Models;
 
 namespace CoreService.Controllers
 {
@@ -21,12 +21,14 @@ namespace CoreService.Controllers
         private readonly IRepository<Ordenes> _context;
         private readonly IRepository<Alimentos> _contextFood;
         private readonly IRepository<Estado> _contextEstado;
+        private readonly IRepository<Menu> _contextmenu;
 
-        public OrdenesController(IRepository<Ordenes> context, IRepository<Alimentos> contextFood, IRepository<Estado> contextEstado)
+        public OrdenesController(IRepository<Ordenes> context, IRepository<Alimentos> contextFood, IRepository<Estado> contextEstado, IRepository<Menu> contextmenu)
         {
             _context = context;
             _contextFood = contextFood;
             _contextEstado = contextEstado;
+            _contextmenu = contextmenu;
         }
 
         // GET: api/Ordenes
@@ -42,7 +44,7 @@ namespace CoreService.Controllers
           {
               foreach (var item in Orders)
               {
-                  SlimOrders.Add(new SlimOrderViewModel { OrdenID = item.OrdenId, ComensalID = item.ComensalId, EstadoDescripcion = item.Estado.Descripcion });
+                  SlimOrders.Add(new SlimOrderViewModel { OrdenID = item.OrdenId, ComensalID = item.ComensalId, EstadoDescripcion = item.Estado.Descripcion, OrdenFecha=item.OrdFecha });
               }
 
               return SlimOrders;
@@ -69,59 +71,21 @@ namespace CoreService.Controllers
                 return NotFound();
             }
 
-            var MenuActual = orden.Menu.FirstOrDefault();
             DetailedOrderViewModel detailedOrder = new DetailedOrderViewModel();
+
             detailedOrder.OrdenID = orden.OrdenId;
             detailedOrder.ComensalID = orden.ComensalId;
             detailedOrder.comensal = orden.Comensal;
             detailedOrder.estado = orden.Estado;
             detailedOrder.estadosList = await _contextEstado.GetAllAsync();
+            detailedOrder.menu = await _contextmenu.getAllAsync(orden.OrdenId);
 
-
-            if (MenuActual != null)
+            foreach (var item in detailedOrder.menu)
             {
+                var price = item.Alimento.Precio;
+                detailedOrder.totalMenu += (double)(price * item.Quantity);
 
-                if (MenuActual.BebidaId != null)
-                {
-                    detailedOrder.bebida = _contextFood.GetOne(MenuActual.BebidaId.Value);
-                    detailedOrder.totalMenu += (double)detailedOrder.bebida.Precio;
-                }
-
-
-                if (MenuActual.SopaId != null)
-                {
-                    detailedOrder.sopa = _contextFood.GetOne(MenuActual.SopaId.Value);
-                    detailedOrder.totalMenu += (double)detailedOrder.sopa.Precio;
-                }
-
-
-                if (MenuActual.PlatoFuerteId != null)
-                {
-                    detailedOrder.platoFuerte = _contextFood.GetOne(MenuActual.PlatoFuerteId.Value);
-                    detailedOrder.totalMenu += (double)detailedOrder.platoFuerte.Precio;
-                }
-
-                if (MenuActual.PostreId != null)
-                {
-                    detailedOrder.postre = _contextFood.GetOne(MenuActual.PostreId.Value);
-                    detailedOrder.totalMenu += (double)detailedOrder.postre.Precio;
-                }
-
-                if (MenuActual.BocadilloId != null)
-                {
-                    detailedOrder.bocadillo = _contextFood.GetOne(MenuActual.BocadilloId.Value);
-                    detailedOrder.totalMenu += (double)detailedOrder.bocadillo.Precio;
-                }
-
-
-                if (MenuActual.ComplementoId != null)
-                {
-                    detailedOrder.complemento = _contextFood.GetOne(MenuActual.ComplementoId.Value);
-                    detailedOrder.totalMenu += (double)detailedOrder.complemento.Precio;
-                }
             }
-
-
 
             return Ok(detailedOrder);
         }
@@ -179,7 +143,7 @@ namespace CoreService.Controllers
         //crearOrden
         [HttpPost("PostOrdenes")]
         public async Task<IActionResult> PostOrdenes([FromBody] OrderViewModel viewModel)
-        {
+        {/*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -212,7 +176,7 @@ namespace CoreService.Controllers
                 }
 
             }
-
+            */
 
             return StatusCode(StatusCodes.Status201Created);
         }

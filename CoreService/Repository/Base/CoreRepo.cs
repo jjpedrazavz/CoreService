@@ -14,7 +14,7 @@ namespace CoreService.Repository
     /// <typeparam name="T"></typeparam>
     public abstract class CoreRepo<T> where T : class, new()
     {
-        public HungryDbContext Context;
+        public Hungry4Context Context;
 
         protected DbSet<T> Table;
 

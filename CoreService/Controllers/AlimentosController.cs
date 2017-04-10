@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoreService.Entities;
-using CoreService.Models;
 using CoreService.Contratos;
 using CoreService.ViewModels;
+using CoreService.Models;
 
 namespace CoreService.Controllers
 {

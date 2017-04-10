@@ -36,5 +36,7 @@ namespace CoreService.Contratos
 
         Task<bool> ContainsAsync(T entity);
 
+        Task<List<T>> getAllAsync(int id);
+
     }
 }

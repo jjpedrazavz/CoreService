@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace CoreService.Models
 {
@@ -13,10 +11,8 @@ namespace CoreService.Models
         }
 
         public int Id { get; set; }
-        
         public string NameFile { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<FoodImageMapping> FoodImageMapping { get; set; }
     }
 }

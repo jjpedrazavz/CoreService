@@ -22,17 +22,7 @@ namespace CoreService.ViewModels
 
         public Comensales comensal { get; set; }
 
-        public Alimentos sopa { get; set; }
-
-        public Alimentos platoFuerte { get; set; }
-
-        public Alimentos bebida { get; set; }
-
-        public Alimentos postre { get; set; }
-
-        public Alimentos complemento { get; set; }
-
-        public Alimentos bocadillo { get; set; }
+        public IEnumerable<Menu> menu { get; set; }
 
         public IEnumerable<Estado> estadosList { get; set; }
 
