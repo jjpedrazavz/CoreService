@@ -10,11 +10,16 @@ namespace CoreService.Repository.Implementations
 {
     public class ComensalesRepo : CoreRepo<Comensales>, IRepository<Comensales>
     {
-        public ComensalesRepo(HungryDbContext context)
+        public ComensalesRepo(Hungry4Context context)
         {
             this.Context = context;
             Table = context.Comensales;
 
+        }
+
+        public Task<List<Comensales>> getAllAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

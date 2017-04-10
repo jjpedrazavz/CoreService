@@ -10,10 +10,15 @@ namespace CoreService.Repository.Implementations
 {
     public class EstadoRepo :CoreRepo<Estado>, IRepository<Estado>
     {
-        public EstadoRepo(HungryDbContext context)
+        public EstadoRepo(Hungry4Context context)
         {
             this.Context = context;
             Table = context.Estado;
+        }
+
+        public Task<List<Estado>> getAllAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

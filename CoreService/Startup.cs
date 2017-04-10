@@ -34,13 +34,16 @@ namespace CoreService
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().
+                AddJsonOptions(options => {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    
+                    });
 
             //inyectamos la dependencia del entityFrame Directamente pasando como referencia la cadena de coneccion a la db
-            services.AddDbContext<HungryDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HunngrySchema2")));
+            services.AddDbContext<Hungry4Context>(options => options.UseSqlServer(Configuration.GetConnectionString("HunngrySchema2")));
 
             //inyectamos la referencia al servicio.
-            
             services.AddSingleton<IRepository<Alimentos>, AlimentosRepo>();
             services.AddSingleton<IRepository<Ordenes>, OrdenesRepo>();
             services.AddSingleton<IRepository<Categorias>, CategoriasRepo>();
@@ -49,11 +52,12 @@ namespace CoreService
             services.AddSingleton<IRepository<FoodImages>, FoodImagesRepo>();
             services.AddSingleton<IRepository<Tipos>, TipoRepo>();
             services.AddSingleton<IRepository<Estado>, EstadoRepo>();
+            services.AddSingleton<IRepository<Menu>, MenuRepo>();
 
         }
 
-        
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, HungryDbContext context)
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, Hungry4Context context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

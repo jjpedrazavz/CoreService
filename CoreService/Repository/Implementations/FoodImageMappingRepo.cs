@@ -11,11 +11,16 @@ namespace CoreService.Repository.Implementations
 {
     public class FoodImageMappingRepo: CoreRepo<FoodImageMapping>, IRepository<FoodImageMapping>
     {
-        public FoodImageMappingRepo(HungryDbContext context)
+        public FoodImageMappingRepo(Hungry4Context context)
         {
             this.Context = context;
             Table = context.FoodImageMapping;
 
+        }
+
+        public Task<List<FoodImageMapping>> getAllAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public override Task<FoodImageMapping> GetOneAsync(int id)

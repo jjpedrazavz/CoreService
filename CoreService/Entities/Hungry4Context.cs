@@ -5,7 +5,7 @@ using CoreService.Models;
 
 namespace CoreService.Entities
 {
-    public partial class HungryDbContext : DbContext
+    public partial class Hungry4Context : DbContext
     {
         public virtual DbSet<Alimentos> Alimentos { get; set; }
         public virtual DbSet<Categorias> Categorias { get; set; }
@@ -17,9 +17,8 @@ namespace CoreService.Entities
         public virtual DbSet<Ordenes> Ordenes { get; set; }
         public virtual DbSet<Tipos> Tipos { get; set; }
 
-
-        public HungryDbContext(DbContextOptions<HungryDbContext> options)
-            : base(options)
+        public Hungry4Context(DbContextOptions<Hungry4Context> options):
+            base(options)
         {
 
         }
@@ -56,7 +55,7 @@ namespace CoreService.Entities
             modelBuilder.Entity<Categorias>(entity =>
             {
                 entity.HasKey(e => e.CategoriaId)
-                    .HasName("PK__Categori__F353C1C5C5CB05D8");
+                    .HasName("PK__Categori__F353C1C5F0982BDB");
 
                 entity.Property(e => e.CategoriaId).HasColumnName("CategoriaID");
 
@@ -68,7 +67,7 @@ namespace CoreService.Entities
             modelBuilder.Entity<Comensales>(entity =>
             {
                 entity.HasKey(e => e.ComensalId)
-                    .HasName("PK__Comensal__5D3B2D0FB0D71639");
+                    .HasName("PK__Comensal__5D3B2D0FE544D8AE");
 
                 entity.Property(e => e.ComensalId).HasColumnName("ComensalID");
 
@@ -87,7 +86,7 @@ namespace CoreService.Entities
 
             modelBuilder.Entity<Estado>(entity =>
             {
-                entity.Property(e => e.EstadoID).HasColumnName("EstadoID");
+                entity.Property(e => e.EstadoId).HasColumnName("EstadoID");
 
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
@@ -125,67 +124,34 @@ namespace CoreService.Entities
             {
                 entity.Property(e => e.MenuId).HasColumnName("MenuID");
 
-                entity.Property(e => e.BebidaId).HasColumnName("bebidaID");
-
-                entity.Property(e => e.BocadilloId).HasColumnName("bocadilloID");
-
-                entity.Property(e => e.ComplementoId).HasColumnName("complementoID");
+                entity.Property(e => e.AlimentoId).HasColumnName("AlimentoID");
 
                 entity.Property(e => e.OrdenId).HasColumnName("OrdenID");
 
-                entity.Property(e => e.PlatoFuerteId).HasColumnName("platoFuerteID");
-
-                entity.Property(e => e.PostreId).HasColumnName("postreID");
-
-                entity.Property(e => e.SopaId).HasColumnName("sopaID");
-
-                entity.HasOne(d => d.Bebida)
-                    .WithMany(p => p.MenuBebida)
-                    .HasForeignKey(d => d.BebidaId)
-                    .HasConstraintName("FK_menu_bebida");
-
-                entity.HasOne(d => d.Bocadillo)
-                    .WithMany(p => p.MenuBocadillo)
-                    .HasForeignKey(d => d.BocadilloId)
-                    .HasConstraintName("FK_menu_bocadillo");
-
-                entity.HasOne(d => d.Complemento)
-                    .WithMany(p => p.MenuComplemento)
-                    .HasForeignKey(d => d.ComplementoId)
-                    .HasConstraintName("FK_menu_complemento");
+                entity.HasOne(d => d.Alimento)
+                    .WithMany(p => p.Menu)
+                    .HasForeignKey(d => d.AlimentoId)
+                    .HasConstraintName("FK_menu_alimento");
 
                 entity.HasOne(d => d.Orden)
                     .WithMany(p => p.Menu)
                     .HasForeignKey(d => d.OrdenId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_menu_ordenes");
-
-                entity.HasOne(d => d.PlatoFuerte)
-                    .WithMany(p => p.MenuPlatoFuerte)
-                    .HasForeignKey(d => d.PlatoFuerteId)
-                    .HasConstraintName("FK_menu_platoFuerte");
-
-                entity.HasOne(d => d.Postre)
-                    .WithMany(p => p.MenuPostre)
-                    .HasForeignKey(d => d.PostreId)
-                    .HasConstraintName("FK_menu_postre");
-
-                entity.HasOne(d => d.Sopa)
-                    .WithMany(p => p.MenuSopa)
-                    .HasForeignKey(d => d.SopaId)
-                    .HasConstraintName("FK_menu_sopa");
             });
 
             modelBuilder.Entity<Ordenes>(entity =>
             {
                 entity.HasKey(e => e.OrdenId)
-                    .HasName("PK__Ordenes__C088A4E4861029B7");
+                    .HasName("PK__Ordenes__C088A4E45D6E2461");
 
                 entity.Property(e => e.OrdenId).HasColumnName("OrdenID");
 
                 entity.Property(e => e.ComensalId).HasColumnName("ComensalID");
 
                 entity.Property(e => e.EstadoId).HasColumnName("EstadoID");
+
+                entity.Property(e => e.OrdFecha).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Comensal)
                     .WithMany(p => p.Ordenes)
@@ -203,7 +169,7 @@ namespace CoreService.Entities
             modelBuilder.Entity<Tipos>(entity =>
             {
                 entity.HasKey(e => e.TipoId)
-                    .HasName("PK__Tipos__97099E97C26DCB8A");
+                    .HasName("PK__Tipos__97099E978BAE0E4A");
 
                 entity.Property(e => e.TipoId).HasColumnName("TipoID");
 
