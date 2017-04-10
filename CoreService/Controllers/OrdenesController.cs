@@ -10,6 +10,7 @@ using CoreService.Models;
 using CoreService.Contratos;
 using CoreService.enums;
 using CoreService.ViewModels;
+using System.Diagnostics;
 
 namespace CoreService.Controllers
 {
@@ -74,71 +75,8 @@ namespace CoreService.Controllers
             detailedOrder.ComensalID = orden.ComensalId;
             detailedOrder.comensal = orden.Comensal;
             detailedOrder.estado = orden.Estado;
+            detailedOrder.estadosList = await _contextEstado.GetAllAsync();
 
-            #region TesstIF
-            /*
-             if(MenuActual != null)
-             {
-
-               if (MenuActual.BebidaId != null)
-               {
-                   var alimento = _contextFood.GetOne(MenuActual.BebidaId.Value);
-                    detailedOrder.bebida.Id = alimento.Id;
-                    detailedOrder.bebida.Nombre = alimento.Nombre;
-                    detailedOrder.bebida.Precio = alimento.Precio;
-                   detailedOrder.totalMenu += (double)detailedOrder.bebida.Precio;
-               }
-
-
-               if (MenuActual.SopaId != null)
-               {
-                    var alimento = _contextFood.GetOne(MenuActual.SopaId.Value);
-                    detailedOrder.sopa.Id = alimento.Id;
-                    detailedOrder.sopa.Nombre = alimento.Nombre;
-                    detailedOrder.sopa.Precio = alimento.Precio;
-                    detailedOrder.totalMenu += (double)detailedOrder.sopa.Precio;
-               }
-
-
-               if (MenuActual.PlatoFuerteId != null)
-               {
-                    var alimento = _contextFood.GetOne(MenuActual.PlatoFuerteId.Value);
-                    detailedOrder.platoFuerte.Id = alimento.Id;
-                    detailedOrder.platoFuerte.Nombre = alimento.Nombre;
-                    detailedOrder.platoFuerte.Precio = alimento.Precio;
-                   detailedOrder.totalMenu += (double)detailedOrder.platoFuerte.Precio;
-               }
-
-               if (MenuActual.PostreId != null)
-               {
-                    var alimento = _contextFood.GetOne(MenuActual.PostreId.Value);
-                    detailedOrder.postre.Id = alimento.Id;
-                    detailedOrder.postre.Nombre = alimento.Nombre;
-                    detailedOrder.postre.Precio = alimento.Precio;
-                   detailedOrder.totalMenu += (double)detailedOrder.postre.Precio;
-               }
-
-               if (MenuActual.BocadilloId != null)
-               {
-                    var alimento = _contextFood.GetOne(MenuActual.BocadilloId.Value);
-                    detailedOrder.bocadillo.Id = alimento.Id;
-                    detailedOrder.bocadillo.Nombre = alimento.Nombre;
-                    detailedOrder.bocadillo.Precio = alimento.Precio;
-                   detailedOrder.totalMenu += (double)detailedOrder.bocadillo.Precio;
-               }
-
-
-               if (MenuActual.ComplementoId != null)
-               {
-                    var alimento = _contextFood.GetOne(MenuActual.ComplementoId.Value);
-                    detailedOrder.complemento.Id = alimento.Id;
-                    detailedOrder.complemento.Nombre = alimento.Nombre;
-                    detailedOrder.complemento.Precio = alimento.Precio;
-                   detailedOrder.totalMenu += (double)detailedOrder.complemento.Precio;
-               }
-             }
-             */
-            #endregion
 
             if (MenuActual != null)
             {
@@ -188,23 +126,37 @@ namespace CoreService.Controllers
             return Ok(detailedOrder);
         }
 
-        // PUT: api/Ordenes/5
+        // PUT: api/Ordenes
         //actualizar Orden
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrdenes([FromRoute] int id, [FromBody] Ordenes orden)
+        [HttpPut("OrdenEdit")]
+        public async Task<IActionResult> OrdenEdit([FromBody] DetailedOrderViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != orden.OrdenId)
-            {
-                return BadRequest();
-            }
+            var orden = await _context.GetOneAsync(viewModel.OrdenID);
 
+            if(orden != null)
+            {
+                orden.EstadoId = viewModel.EstadoID;
+            }
+            else
+            {
+                return NotFound("No se encontro el objeto");
+            }
+            
+
+            try
+            {
                 await _context.SaveAsync(orden);
-        
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status304NotModified);
+            }
+            
 
             return NoContent();
         }

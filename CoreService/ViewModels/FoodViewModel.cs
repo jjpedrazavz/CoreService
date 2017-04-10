@@ -22,10 +22,6 @@ namespace CoreService.ViewModels
         public int SelectedImage { get; set; }
 
 
-        public SelectList Categories { get; set; }
-
-        public SelectList Tipos { get; set; }
-
         public IEnumerable<FoodImages> ImagenesStock { get; set; }
 
         public IEnumerable<Categorias> CategoriasStock { get; set; }

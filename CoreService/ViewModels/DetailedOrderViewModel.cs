@@ -16,6 +16,8 @@ namespace CoreService.ViewModels
 
         public int ComensalID { get; set; }
 
+        public int EstadoID { get; set; }
+
         public Estado estado { get; set; }
 
         public Comensales comensal { get; set; }
@@ -32,6 +34,7 @@ namespace CoreService.ViewModels
 
         public Alimentos bocadillo { get; set; }
 
+        public IEnumerable<Estado> estadosList { get; set; }
 
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:c}")]

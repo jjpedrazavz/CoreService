@@ -11,7 +11,7 @@ namespace CoreService.Models
             Ordenes = new HashSet<Ordenes>();
         }
 
-        public int EstadoId { get; set; }
+        public int EstadoID { get; set; }
         public string Descripcion { get; set; }
 
         [JsonIgnore]

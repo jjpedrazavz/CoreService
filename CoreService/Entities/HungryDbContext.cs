@@ -87,7 +87,7 @@ namespace CoreService.Entities
 
             modelBuilder.Entity<Estado>(entity =>
             {
-                entity.Property(e => e.EstadoId).HasColumnName("EstadoID");
+                entity.Property(e => e.EstadoID).HasColumnName("EstadoID");
 
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
