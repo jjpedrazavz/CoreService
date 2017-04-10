@@ -143,7 +143,7 @@ namespace CoreService.Controllers
         //crearOrden
         [HttpPost("PostOrdenes")]
         public async Task<IActionResult> PostOrdenes([FromBody] OrderViewModel viewModel)
-        {/*
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -151,21 +151,19 @@ namespace CoreService.Controllers
             else
             {
                 Ordenes orden = new Ordenes();
-                orden.ComensalId = 1;
-                orden.EstadoId = viewModel.EstadoID;
+                orden.ComensalId = viewModel.ComensalID;
+                orden.EstadoId = 1;
+                orden.OrdFecha = DateTime.Now;
                 orden.Menu = new List<Menu>();
 
-                orden.Menu.Add(new Menu
+                foreach (var item in viewModel.menuSeleccionado)
                 {
-                    BebidaId = viewModel.bebidaID,
-                    SopaId = viewModel.sopaID,
-                    PlatoFuerteId = viewModel.platoFuerteID,
-                    ComplementoId = viewModel.complementoID,
-                    BocadilloId = viewModel.bocadilloID,
-                    PostreId = viewModel.postreID,
-
-                });
-
+                    orden.Menu.Add(new Menu
+                    {
+                        AlimentoId = item.AlimentoID,
+                        Quantity = item.Cantidad
+                    });
+                }
                 try
                 {
                     await _context.AddAsync(orden);
@@ -176,7 +174,7 @@ namespace CoreService.Controllers
                 }
 
             }
-            */
+            
 
             return StatusCode(StatusCodes.Status201Created);
         }

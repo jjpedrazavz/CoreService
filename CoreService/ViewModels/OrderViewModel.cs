@@ -1,5 +1,6 @@
 ﻿using CoreService.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,27 +11,18 @@ namespace CoreService.ViewModels
 {
     public class OrderViewModel
     {
-        [Display(Name = "Numero Orden")]
         public int OrdenID { get; set; }
 
-        [Required]
-        [Display(Name = "Comensal")]
         public int ComensalID { get; set; }
 
-        [Required]
         public int EstadoID { get; set; }
 
-        public int sopaID { get; set; }
-        public int platoFuerteID { get; set; }
-        public int bebidaID { get; set; }
-        public int postreID { get; set; }
-        public int complementoID { get; set; }
+        public IList<MenuViewModel> menuSeleccionado { get; set; }
 
-        public int bocadilloID { get; set; }
-
-
+        [JsonIgnore]
         public SelectList Estados { get; set; }
 
+        [JsonIgnore]
         public List<SelectList> MenusSeleccionar { get; set; }
 
         public IEnumerable<Alimentos> AlimentosList { get; set; }

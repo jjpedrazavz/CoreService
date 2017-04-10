@@ -10,8 +10,7 @@ namespace CoreService.ViewModels
 {
     public class DetailedOrderViewModel
     {
-        
-        [Display(Name = "Numero de Orden")]
+       
         public int OrdenID { get; set; }
 
         public int ComensalID { get; set; }
@@ -26,8 +25,6 @@ namespace CoreService.ViewModels
 
         public IEnumerable<Estado> estadosList { get; set; }
 
-        [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "{0:c}")]
         public double totalMenu { get; set; }
     }
 }
