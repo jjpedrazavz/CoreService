@@ -7,7 +7,7 @@ namespace CoreService.ViewModels
 {
     public class MenuViewModel
     {
-        public string AlimentoID { get; set; }
+        public int AlimentoID { get; set; }
 
         public int Cantidad { get; set; }
     }

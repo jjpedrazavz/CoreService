@@ -17,7 +17,7 @@ namespace CoreService.ViewModels
 
         public int EstadoID { get; set; }
 
-        public Dictionary<int, MenuViewModel> menuSeleccionado { get; set; }
+        public IList<MenuViewModel> menuSeleccionado { get; set; }
 
         [JsonIgnore]
         public SelectList Estados { get; set; }

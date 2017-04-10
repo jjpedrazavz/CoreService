@@ -156,16 +156,13 @@ namespace CoreService.Controllers
                 orden.OrdFecha = DateTime.Now;
                 orden.Menu = new List<Menu>();
 
-                foreach (var key in viewModel.menuSeleccionado.Keys)
+                foreach (var item in viewModel.menuSeleccionado)
                 {
-                    if (!string.IsNullOrWhiteSpace(viewModel.menuSeleccionado[key].AlimentoID))
+                    orden.Menu.Add(new Menu
                     {
-                        orden.Menu.Add(new Menu
-                        {
-                            AlimentoId = int.Parse(viewModel.menuSeleccionado[key].AlimentoID),
-                            Quantity = viewModel.menuSeleccionado[key].Cantidad
-                        });
-                    }
+                        AlimentoId = item.AlimentoID,
+                        Quantity = item.Cantidad
+                    });
                 }
                 try
                 {
