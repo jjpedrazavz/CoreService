@@ -162,8 +162,6 @@ namespace CoreService.Controllers
                     {
                         orden.Menu.Add(new Menu
                         {
-                            OrdenId = viewModel.OrdenID,
-                            Alimento = await _contextFood.GetOneAsync(int.Parse(viewModel.menuSeleccionado[key].AlimentoID)),
                             AlimentoId = int.Parse(viewModel.menuSeleccionado[key].AlimentoID),
                             Quantity = viewModel.menuSeleccionado[key].Cantidad
                         });
