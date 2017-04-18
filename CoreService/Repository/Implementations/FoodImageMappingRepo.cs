@@ -20,7 +20,8 @@ namespace CoreService.Repository.Implementations
 
         public Task<List<FoodImageMapping>> getAllAsync(int id)
         {
-            throw new NotImplementedException();
+            return Table.Include(p => p.AlimentosImage).Where(p => p.AlimentosImageId == id).ToListAsync();
+
         }
 
         public override Task<FoodImageMapping> GetOneAsync(int id)
