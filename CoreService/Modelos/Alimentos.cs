@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreService.Models
 {
@@ -14,6 +15,10 @@ namespace CoreService.Models
 
         public int Id { get; set; }
         public string Nombre { get; set; }
+
+        [StringLength(200)]
+        public string Descripcion { get; set; }
+
         public int CategoriaId { get; set; }
         public decimal Precio { get; set; }
         public int TipoId { get; set; }

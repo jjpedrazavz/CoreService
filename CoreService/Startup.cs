@@ -14,6 +14,7 @@ using CoreService.Repository;
 using CoreService.Data;
 using CoreService.Repository.Implementations;
 using CoreService.Models;
+using CoreService.Modelos;
 
 namespace CoreService
 {
@@ -53,6 +54,7 @@ namespace CoreService
             services.AddSingleton<IRepository<Tipos>, TipoRepo>();
             services.AddSingleton<IRepository<Estado>, EstadoRepo>();
             services.AddSingleton<IRepository<Menu>, MenuRepo>();
+            services.AddSingleton<IRepository<MenuBundle>, MenuBundleRepo>();
 
         }
 

@@ -22,5 +22,10 @@ namespace CoreService.Repository.Implementations
             return await Table.Include(p => p.Alimento).Where(p => p.OrdenId == orderID).ToListAsync();
         }
 
+        public override Task<List<Menu>> GetAllAsync()
+        {
+            return Table.Include(p => p.Alimento).ToListAsync();
+        }
+
     }
 }

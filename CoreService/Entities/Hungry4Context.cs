@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using CoreService.Models;
+using CoreService.Modelos;
 
 namespace CoreService.Entities
 {
@@ -16,6 +17,8 @@ namespace CoreService.Entities
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<Ordenes> Ordenes { get; set; }
         public virtual DbSet<Tipos> Tipos { get; set; }
+        public virtual DbSet<MenuBundle> MenuBundle { get; set; }
+
 
         public Hungry4Context(DbContextOptions<Hungry4Context> options):
             base(options)
