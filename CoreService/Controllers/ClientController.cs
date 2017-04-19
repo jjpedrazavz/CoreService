@@ -176,19 +176,30 @@ namespace CoreService.Controllers
             foreach (var item in viewModel.menuSeleccionado)
             {
 
-               if(item.BundleId == null)
+                System.Diagnostics.Debug.WriteLine("BundleId: "+item.BundleId);
+
+                if (item.BundleId ==0)
                 {
                     orden.Menu.Add(new Menu { AlimentoId = item.AlimentoID, Quantity = item.Cantidad });
                 }
                 else
                 {
-                    var AlimentosList = await _contextMenu.getAllAsync(item.BundleId.Value);
+                    System.Diagnostics.Debug.WriteLine("Entrado al else: "+item.BundleId);
 
-                    foreach (var element in AlimentosList)
+                    var MenusList = await _contextMenu.GetAllAsync();
+
+                    var BundleItems = (from elem in MenusList
+                                       where elem.OrdenId == null && elem.BundleId ==item.BundleId
+                                       select elem).ToList();
+
+                    System.Diagnostics.Debug.WriteLine("Tamaño de Bundle " + BundleItems.Count);
+
+                    foreach (var element in BundleItems)
                     {
                         orden.Menu.Add(new Menu { AlimentoId = element.AlimentoId, BundleId = item.BundleId, Quantity = item.Cantidad });
                     }
                 }
+
             }
 
             try
