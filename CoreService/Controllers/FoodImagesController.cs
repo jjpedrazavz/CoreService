@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CoreService.Entities;
 using CoreService.Models;
 using CoreService.Contratos;
+using System.Diagnostics;
 
 namespace CoreService.Controllers
 {
@@ -67,7 +68,7 @@ namespace CoreService.Controllers
         }
 
         // POST: api/FoodImages
-        [HttpPost]
+        [HttpPost("PostFoodImages")]
         public async Task<IActionResult> PostFoodImages([FromBody] FoodImages foodImages)
         {
             if (!ModelState.IsValid)
@@ -77,17 +78,22 @@ namespace CoreService.Controllers
 
             int value =  await _contextImages.AddAsync(foodImages);
 
+            Debug.WriteLine("numero: "+value);
+
             if (value > 0)
             {
-                return StatusCode(StatusCodes.Status201Created);
+                return Ok();
             }
 
-            return StatusCode(StatusCodes.Status400BadRequest);
+            string fileName = foodImages.NameFile.Substring(foodImages.NameFile.IndexOf('.'));
+
+
+            return Ok(fileName);
 
         }
 
         // DELETE: api/FoodImages/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteFoodImages/{id}")]
         public async Task<IActionResult> DeleteFoodImages([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -95,16 +101,16 @@ namespace CoreService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var foodImages = await _contextImages.GetOneAsync(id);
+            var image = await _contextImages.GetOneAsync(id);
 
-            if (foodImages == null)
+            if(image == null)
             {
                 return NotFound();
             }
 
             try
             {
-               await _contextImages.DeleteAsync(foodImages);
+               await _contextImages.DeleteAsync(image);
             }
             catch (Exception)
             {
@@ -114,7 +120,7 @@ namespace CoreService.Controllers
             return StatusCode(StatusCodes.Status204NoContent);
         }
 
-        [HttpGet("GetMaapings")]
+        [HttpGet("GetMaapings/{id}")]
         public async Task<IEnumerable<FoodImageMapping>> GetMaapings([FromRoute]int id)
         {
             return await _contextMapping.getAllAsync(id);

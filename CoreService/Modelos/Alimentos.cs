@@ -23,6 +23,8 @@ namespace CoreService.Models
         public decimal Precio { get; set; }
         public int TipoId { get; set; }
 
+        public bool estatus { get; set; }
+
         public virtual ICollection<FoodImageMapping> FoodImageMapping { get; set; }
 
         [JsonIgnore]

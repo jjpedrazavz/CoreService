@@ -8,9 +8,10 @@ using CoreService.Entities;
 namespace CoreService.Migrations
 {
     [DbContext(typeof(Hungry4Context))]
-    partial class Hungry4ContextModelSnapshot : ModelSnapshot
+    [Migration("20170420114725_AddColumEstatusAlimento")]
+    partial class AddColumEstatusAlimento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -56,7 +57,7 @@ namespace CoreService.Migrations
                     b.Property<int>("TipoId")
                         .HasColumnName("tipoID");
 
-                    b.Property<bool>("estatus");
+                    b.Property<int>("estatus");
 
                     b.HasKey("Id");
 
