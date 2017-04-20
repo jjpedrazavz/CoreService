@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreService.Repository.Implementations
 {
@@ -26,5 +27,13 @@ namespace CoreService.Repository.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public override Task<FoodImages> GetOneAsync(int id)
+        {
+
+            return Table.Include(p => p.FoodImageMapping).Where(p => p.Id == id).FirstOrDefaultAsync();
+
+        }
+
     }
 }

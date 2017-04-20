@@ -50,7 +50,12 @@ namespace CoreService.Controllers
             {
                   viewModel.CategoriasStock = _contextCategories.GetAll();
                   viewModel.TiposStock = _contextTipos.GetAll();
-                  viewModel.SelectedImage = alimento.FoodImageMapping.FirstOrDefault().AlimentosImageId.Value;
+
+                 if(alimento.FoodImageMapping != null && alimento.FoodImageMapping.Count > 0)
+                {
+                    viewModel.SelectedImage = alimento.FoodImageMapping.FirstOrDefault().AlimentosImageId.Value;
+                }
+                  
                   viewModel.ImagenesStock = _contextFoodImages.GetAll();
                   viewModel.ID = alimento.Id;
                   viewModel.Nombre = alimento.Nombre;
@@ -192,9 +197,9 @@ namespace CoreService.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        // DELETE: api/Alimentos/5
-        [HttpDelete("DeleteAlimentos/{id}")]
-        public async Task<IActionResult> DeleteAlimentos([FromRoute] int id)
+        // Desactivate: api/Alimentos/5
+        [HttpPut("DesactivateAlimento/{id}")]
+        public async Task<IActionResult> DesactivateAlimento([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -202,13 +207,14 @@ namespace CoreService.Controllers
             }
 
             var alimento = await _context.GetOneAsync(id);
+                alimento.estatus = false;
             
             if (alimento == null)
             {
                 return NotFound();
             }
 
-             await _context.DeleteAsync(alimento);
+             await _context.SaveAsync(alimento);
 
             return StatusCode(StatusCodes.Status200OK);
         }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CoreService.Entities;
 using CoreService.Models;
 using CoreService.Contratos;
 using CoreService.ViewModels.ClientMovil;
 using CoreService.Modelos;
+using CoreService.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreService.Controllers
 {
@@ -17,15 +17,13 @@ namespace CoreService.Controllers
     [Route("api/ClientMenu")]
     public class ClientController : Controller
     {
-        private readonly Hungry4Context _context;
         private readonly IRepository<Menu> _contextMenu;
         private readonly IRepository<Alimentos> _contextAlimentos;
         private readonly IRepository<MenuBundle> _contextMenuBundle;
         private readonly IRepository<Ordenes> _contextOrdenes;
 
-        public ClientController(Hungry4Context context, IRepository<Menu> contextMenu, IRepository<Alimentos> contextAlimentos, IRepository<MenuBundle> contextMenuBundle, IRepository<Ordenes> contextOrdenes)
+        public ClientController(IRepository<Menu> contextMenu, IRepository<Alimentos> contextAlimentos, IRepository<MenuBundle> contextMenuBundle, IRepository<Ordenes> contextOrdenes)
         {
-            _context = context;
             _contextMenu = contextMenu;
             _contextAlimentos = contextAlimentos;
             _contextMenuBundle = contextMenuBundle;
@@ -93,70 +91,48 @@ namespace CoreService.Controllers
             return menus;
         }
 
-        // GET: api/ClientMenu/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMenu([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var menu = await _context.Menu.SingleOrDefaultAsync(m => m.MenuId == id);
-
-            if (menu == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(menu);
-        }
-
-
+      
         [HttpGet("GetCreateOrder")]
         public async Task<IActionResult> GetCreateOrder()
         {
             ClientOrdersViewModel viewModel = new ClientOrdersViewModel();
-            viewModel.AlimentosList = await _contextAlimentos.GetAllAsync();
+
+            var stock = await _contextAlimentos.GetAllAsync();
+
+            viewModel.AlimentosList = stock.Where(p => p.estatus == true).ToList();
 
             return Ok(viewModel);
         }
 
 
-        // PUT: api/ClientMenu/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMenu([FromRoute] int id, [FromBody] Menu menu)
+        [HttpGet("GetClientOrders/{comensalID}")]
+        public async Task<IEnumerable<SlimOrderViewModel>> GetOrders([FromRoute]int comensalID)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState);
-            }
+                var ordenes = await _contextOrdenes.GetAllAsync();
 
-            if (id != menu.MenuId)
-            {
-                return BadRequest();
-            }
+                var ClientOrders = (from element in ordenes
+                                    where element.ComensalId == comensalID
+                                    select element).ToList();
 
-            _context.Entry(menu).State = EntityState.Modified;
+                List<SlimOrderViewModel> slimOrders = new List<SlimOrderViewModel>();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MenuExists(id))
+                foreach (var item in ClientOrders)
                 {
-                    return NotFound();
+                    slimOrders.Add(new SlimOrderViewModel { ComensalID = comensalID, OrdenID = item.OrdenId, OrdenFecha = item.OrdFecha, EstadoDescripcion = item.Estado.Descripcion });
+
                 }
-                else
-                {
-                    throw;
-                }
+
+
+                return slimOrders;
+
             }
 
-            return NoContent();
+            return null;
+
         }
+
 
         // POST: api/ClientMenu
         [HttpPost("CreateOrder")]
@@ -216,30 +192,5 @@ namespace CoreService.Controllers
 
         }
 
-        // DELETE: api/ClientMenu/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMenu([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var menu = await _context.Menu.SingleOrDefaultAsync(m => m.MenuId == id);
-            if (menu == null)
-            {
-                return NotFound();
-            }
-
-            _context.Menu.Remove(menu);
-            await _context.SaveChangesAsync();
-
-            return Ok(menu);
-        }
-
-        private bool MenuExists(int id)
-        {
-            return _context.Menu.Any(e => e.MenuId == id);
-        }
     }
 }

@@ -21,6 +21,8 @@ namespace CoreService.ViewModels
 
         public int SelectedImage { get; set; }
 
+        public bool estatus { get; set; }
+
 
         public IEnumerable<FoodImages> ImagenesStock { get; set; }
 
