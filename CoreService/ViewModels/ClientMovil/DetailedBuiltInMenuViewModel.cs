@@ -24,5 +24,7 @@ namespace CoreService.ViewModels.ClientMovil
         public string PostreNombre { get; set; }
 
         public string ComplementoNombre { get; set; }
+
+        public string BocadilloNombre { get; set; }
     }
 }

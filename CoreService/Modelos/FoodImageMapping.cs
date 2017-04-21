@@ -13,6 +13,7 @@ namespace CoreService.Models
 
         [JsonIgnore]
         public virtual Alimentos Alimentos { get; set; }
+
         public virtual FoodImages AlimentosImage { get; set; }
     }
 }
