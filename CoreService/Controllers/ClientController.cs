@@ -21,13 +21,15 @@ namespace CoreService.Controllers
         private readonly IRepository<Alimentos> _contextAlimentos;
         private readonly IRepository<MenuBundle> _contextMenuBundle;
         private readonly IRepository<Ordenes> _contextOrdenes;
+        private readonly IRepository<FoodImages> _contextFoodImages;
 
-        public ClientController(IRepository<Menu> contextMenu, IRepository<Alimentos> contextAlimentos, IRepository<MenuBundle> contextMenuBundle, IRepository<Ordenes> contextOrdenes)
+        public ClientController(IRepository<Menu> contextMenu, IRepository<Alimentos> contextAlimentos, IRepository<MenuBundle> contextMenuBundle, IRepository<Ordenes> contextOrdenes, IRepository<FoodImages> contextFoodImages)
         {
             _contextMenu = contextMenu;
             _contextAlimentos = contextAlimentos;
             _contextMenuBundle = contextMenuBundle;
             _contextOrdenes = contextOrdenes;
+            _contextFoodImages = contextFoodImages;
         }
 
         // GET: api/ClientMenu
@@ -52,38 +54,20 @@ namespace CoreService.Controllers
                                 where element.BundleId == item.MenuBundleId
                                 select new { Alimento = element.Alimento, Tipo = element.Alimento.TipoId}).ToList();
 
+                viewModel.Seleccionados = new List<string>();
+
 
                 foreach (var alimento in builtMenu)
                 {
-
-                    switch (alimento.Tipo)
-                    {
-                        case 1:
-                            viewModel.SopaNombre = alimento.Alimento.Nombre;
-                            break;
-                        case 2:
-                            viewModel.BebidaNombre = alimento.Alimento.Nombre;
-                            break;
-                        case 3:
-                            viewModel.PlatoFuerteNombre = alimento.Alimento.Nombre;
-                            break;
-                        case 4:
-                            viewModel.PostreNombre = alimento.Alimento.Nombre;
-                            break;
-                        case 5:
-                            viewModel.ComplementoNombre = alimento.Alimento.Nombre;
-                            break;
-                        default:
-                            break;
-                    }
-
+                    viewModel.Seleccionados.Add(alimento.Alimento.Nombre);
 
                 }
 
-                viewModel.precio = (double)item.Price;
+                viewModel.Precio = (double)item.Price;
                 viewModel.BundleId = item.MenuBundleId;
-                viewModel.NameMenu = item.MenuBundleIdName;
+                viewModel.NameMenu = item.MenuBundleName;
                 viewModel.MenuCategory = item.MenuCategory;
+
                 menus.Add(viewModel);
             }
 
@@ -100,6 +84,14 @@ namespace CoreService.Controllers
             var stock = await _contextAlimentos.GetAllAsync();
 
             viewModel.AlimentosList = stock.Where(p => p.estatus == true).ToList();
+
+            foreach (var item in viewModel.AlimentosList)
+            {
+                foreach (var element in item.FoodImageMapping)
+                {
+                    element.AlimentosImage = _contextFoodImages.GetOne(element.AlimentosImageId.Value);
+                }
+            }
 
             return Ok(viewModel);
         }

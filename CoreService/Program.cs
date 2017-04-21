@@ -14,7 +14,7 @@ namespace CoreService
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://coreserviceapi.azurewebsites.net")
+                .UseUrls("http://192.168.15.5:5000")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()

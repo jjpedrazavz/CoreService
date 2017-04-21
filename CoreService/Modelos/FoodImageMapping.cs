@@ -11,7 +11,7 @@ namespace CoreService.Models
         public int? ImageNumber { get; set; }
         public int? AlimentosImageId { get; set; }
 
-        [JsonIgnore]
+
         public virtual Alimentos Alimentos { get; set; }
 
         public virtual FoodImages AlimentosImage { get; set; }

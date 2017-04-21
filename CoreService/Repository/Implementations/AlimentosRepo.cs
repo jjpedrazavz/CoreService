@@ -20,7 +20,7 @@ namespace CoreService.Repository.Implementations
 
         public override Task<List<Alimentos>> GetAllAsync()
         {
-            return Table.Include(p => p.Categoria).Include(p => p.Tipo).ToListAsync();
+            return Table.Include(p => p.Categoria).Include(p => p.Tipo).Include(p => p.FoodImageMapping).ToListAsync();
         }
 
         public Task<List<Alimentos>> getAllAsync(int id)
